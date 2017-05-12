@@ -12,7 +12,7 @@ print(charChoiceList)
 # 関数化
 # char = "Hi He Lied Because Boron Could Not Oxidize Fluorine. New Nations Might Also Sign Peace Security Clause. Arthur King Can."
 # charWordList = char.split(" ")
-# def n_gram(charList):
+# def choiceAtom(charList):
 # 	charChoiceList = []
 # 	for i in range(len(charWordList)):
 # 		tmpCharList = list(charWordList[i])
@@ -21,5 +21,5 @@ print(charChoiceList)
 # 		else:
 # 			charChoiceList.append(tmpCharList[0]+tmpCharList[1])
 # 	return charChoiceList
-# charChoiceList = n_gram(charWordList)
+# charChoiceList = choiceAtom(charWordList)
 # print(charChoiceList)
