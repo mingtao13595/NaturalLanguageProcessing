@@ -18,7 +18,7 @@ for line in f2:
 f2.close()
 
 wf = open('./file/ex13_result.txt', 'w')
-# print(len(union_array['col1']))
-for count in range(len(union_array['col1'])):
-	wf.write(union_array['col1'][count]+"\t"+union_array['col2'][count]+"\n")
+if len(union_array['col1']) == len(union_array['col2']):
+	for count in range(len(union_array['col1'])):
+		wf.write(union_array['col1'][count]+"\t"+union_array['col2'][count]+"\n")
 wf.close()
