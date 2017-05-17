@@ -16,39 +16,17 @@ for line in f:
 	record_num+=1
 f.close()
 
-lineList.sort(key=lambda x:x[0])
-lineList.sort(key=lambda x:x[2])
-print (lineList)
+estmateList = {}
+for i in range(len(fileList)):
+	estmateList[i] = fileList[i]["temp"]
+sort_estmateList = sorted(estmateList.items(), key=lambda x:x[1])
 
-# temp = []
-# for record in fileList:
-#
-#
-# 	temp.append(record["temp"])
-#
-# sorted(temp)
+print(sort_estmateList)
+estmateFileList = []
+for record in fileList:
+	if record["id"] = sort_estmateList[]
 
-# sort_inverse_tmp_list = []
-# for line in fileList["temp"]:
-# 	sort_inverse_tmp_list.append(line)
-#
-# print(sort_inverse_tmp_list)
-# print(fileList["temp"][1]["temp"])
-# print(fileList)
 
-# sort_inverse_tmp_list = sorted(fileList["temp"]["temp"])
-
-# print(fileList["temp"])
-#
-# sort_inverse_tmp_list = {
-# 	"pref":[],
-# 	"area":[],
-# 	"temp":[],
-# 	"dete":[]
-# }
-#
-# for i in range(fileListLength):
-# 	sort_inverse_tmp_list["pref"].append(lineList[0])
-# 	sort_inverse_tmp_list["area"].append(lineList[1])
-# 	sort_inverse_tmp_list["temp"].append(lineList[2])
-# 	sort_inverse_tmp_list["dete"].append(lineList[3])
+for line in sort_estmateList
+	for i in range(len(fileList))
+		estmateFileList.append(fileList[i]["id"]);
