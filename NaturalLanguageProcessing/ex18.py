@@ -1,8 +1,8 @@
 # coding: UTF-8
 #!/usr/bin/env python
 f = open('./file/hightemp.txt', 'r')
-fileList = {}
 
+fileList = {}
 # 処理をする連想配列の定義
 record_num = 0
 for line in f:
