@@ -2,24 +2,24 @@
 #!/usr/bin/env python
 import codecs
 import json
+import re
 
 # ファイルを使って開き、透過的なエンコード/デコードする
 json_file = codecs.open('./file/jawiki-country.json', 'r', 'utf_8')
-
-# def dictionary_tree(dictionary):
-# 	tree_box = []
-# 	for key, value in dictionary.items():
-# 		tree_box.append(key)
-# 		if isinstance(value, dict) == True:
-# 			dictionary_tree(value)
-# 		else:
-# 			print(tree_box)
-# 		tree_box.pop()
-# dictionary_tree(dictionary)
+repatter_int = re.compile('.+Category.+')
 
 if __name__ == "__main__":
+	articleList = []
 	for line in json_file:
-		file_record = json.loads(line)
-		
+		file_record  = json.loads(line)
+		fileLineList = line[:-1].split('\\n')
+		articleList.append(fileLineList)
 
-		dictionary_tree(file_record)
+	category_match = open('./file/ex21_practice.txt', 'w')
+	for line in articleList:
+		for raw in line:
+			category_row = repatter_int.findall(raw)
+			if len(category_row) != 0:
+				category_match.write(str(category_row)+"\n")
+				# print(category_row)
+	category_match.close()
