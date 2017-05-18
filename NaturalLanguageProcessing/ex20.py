@@ -10,6 +10,4 @@ if __name__ == "__main__":
 	for line in json_file:
 		file_record = json.loads(line)
 		if file_record["title"] == "イギリス":
-			# print(file_record)
-			with codecs.open('UK.txt', 'w', 'utf_8') as file:
-				file.write(file_record["text"])
+			print(file_record)
