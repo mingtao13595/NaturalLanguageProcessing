@@ -6,8 +6,8 @@ import re
 
 # ファイルを使って開き、透過的なエンコード/デコードする
 json_file = codecs.open('./file/jawiki-country.json', 'r', 'utf_8')
-repatter_int = re.compile('.+Category.+')
-repatter_category_word = re.compile('Category:.+]')
+repatter_int = re.compile('Category:.+\]')
+# repatter_category_word = re.compile('Category:.+]')
 
 if __name__ == "__main__":
 	articleList = []
@@ -21,7 +21,8 @@ if __name__ == "__main__":
 		for raw in line:
 			category_row = repatter_int.findall(raw)
 			if len(category_row) != 0:
-				category_word = repatter_category_word.findall(str(category_row))
+				category_word = re.sub(r']].+', '', category_row[0])
+				category_word = re.sub(']]', '', category_word)
+				category_word = re.sub(r'\|.+', '', category_word)
 				category_match.write(str(category_word)+"\n")
-				# print(category_row)
 	category_match.close()
