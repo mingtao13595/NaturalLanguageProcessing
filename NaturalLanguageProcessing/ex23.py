@@ -6,12 +6,6 @@ import re
 
 # ファイルを使って開き、透過的なエンコード/デコードする
 json_file = codecs.open('./file/jawiki-country.json', 'r', 'utf_8')
-# 正規表現を書く
-# repatter  = re.compile('.+section=1.+')
-# repatter  = re.compile('.+section=.+')
-repatter  = re.compile('^=')
-
-# repatter  = re.compile('.+=[0-9].+')
 
 # ディクショナリー構造をツリー構造化して出すメソッド
 def dictionary_tree(dictionary):
