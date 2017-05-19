@@ -7,7 +7,12 @@ import json
 json_file = codecs.open('./file/jawiki-country.json', 'r', 'utf_8')
 
 if __name__ == "__main__":
+	us_list = []
+	category_match = open('./file/ex20_practice.txt', 'w')
 	for line in json_file:
 		file_record = json.loads(line)
 		if file_record["title"] == "イギリス":
-			print(file_record)
+			us_list.append(file_record)
+			category_match.write(str(file_record)+"\n")
+	category_match.close()
+	# print(us_list)
