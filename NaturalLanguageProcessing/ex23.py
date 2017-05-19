@@ -8,29 +8,48 @@ import re
 json_file = codecs.open('./file/jawiki-country.json', 'r', 'utf_8')
 # 正規表現を書く
 # repatter  = re.compile('.+section=1.+')
-repatter  = re.compile('.+section=.+')
+# repatter  = re.compile('.+section=.+')
+repatter  = re.compile('^=')
+
 # repatter  = re.compile('.+=[0-9].+')
+
+# ディクショナリー構造をツリー構造化して出すメソッド
+def dictionary_tree(dictionary):
+	tree_box = []
+	for key, value in dictionary.items():
+		tree_box.append(key)
+		if isinstance(value, dict) == True:
+			dictionary_tree(value)
+		else:
+			print(tree_box)
+		tree_box.pop()
+
+def search_list(str):
+	result_list = []
+	for line in json_file:
+		file_record = json.loads(line)
+		if file_record["title"] == str:
+			result_list.append(file_record)
+	return result_list
+
 
 if __name__ == "__main__":
 	articleList = []
-	for line in json_file:
-		file_record  = json.loads(line)
-		fileLineList = line[:-1].split('\\n')
-		articleList.append(fileLineList)
+	us_list = search_list("イギリス")
+	for line in us_list:
+		fileLineList = line['text'][:-1].split('\n')
+		for element in fileLineList:
+			if re.match(r'^=', element):
+				articleList.append(element)
 
 	category_match = open('./file/ex23_practice.txt', 'w')
-
+	section = {}
 	for line in articleList:
-		for raw in line:
-			category_row = raw
-			category_row = repatter.findall(raw)
-			if len(category_row) != 0:
-				category_word = category_row[0]
-				# category_word = category_row
-				# 扶養文字列削除
-				# category_word = re.sub(r']].+', '', category_word)
-				# category_word = re.sub(']]'   , '', category_word)
-				# category_word = re.sub(r'\|.+', '', category_word)
-				category_match.write(category_word + "\n")
-				# print(category_word)
+		section_level = line.count('=')
+		section_level_num = section_level/2 - 1.0
+		section_word = re.sub('=', '', line)
+		section_word = re.sub(' ', '', section_word)
+		category_match.write(section_word + ":" + str(section_level_num))
+		section[section_word] = section_level_num
+	print(section)
 	category_match.close()
