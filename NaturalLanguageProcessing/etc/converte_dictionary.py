@@ -16,11 +16,20 @@ def converte_dictionary(list):
 			if re.match('{' , char):
 				# リストの値をコピー
 				input_char_list = copy.deepcopy(char_list)
+				
 				str_list.append(input_char_list)
+				del char_list[:]
+			elif re.match('}' , char):
+				# リストの値をコピー
+				input_char_list = copy.deepcopy(char_list)
+				str_list.append(input_char_list)
+				str_list.append(["end"])
 				del char_list[:]
 			else:
 				char_list.extend(char)
-		print(str_list)
+
+		for line in str_list:
+			print(line)
 
 			# matchOB = re.match('\{' , char)
 			#
@@ -31,7 +40,7 @@ def converte_dictionary(list):
 
 # sample = ["{{AAA},aaaaaaa}aaaa", "{{ｐｐｐｐｐｐ}, {ｐｐｐｐｐｐｐｐｐ}}", "{{ああああああああ},{あああああああああああ}}"]
 
-sample = ["{{AAA},aaaaaaa}aaaa" "{{ｐｐｐｐｐｐ} {ｐｐｐｐｐｐｐｐｐ}}" "{{ああああああああ}{あああああああああああ}}"]
+sample = ["{{AAA},aaaaaaa}{{ｐｐｐｐｐｐ} {ｐｐｐｐｐｐｐｐｐ}}{{ああああああああ}{あああああああああああ}}"]
 
 
 converte_dictionary(sample)
