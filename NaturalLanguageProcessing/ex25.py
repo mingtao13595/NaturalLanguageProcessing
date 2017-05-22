@@ -1,56 +1,32 @@
-#!/usr/bin/env python
-# coding: UTF-8
+# coding: utf-8
 import codecs
 import json
 import re
 
-# ファイルを使って開き、透過的なエンコード/デコードする
-json_file = codecs.open('./file/jawiki-country.json', 'r', 'utf_8')
-repatter = re.compile('\{')
-
-
-def search_list(str):
-	result_list = []
+def extract_UK():
+	json_file = codecs.open('./file/jawiki-country.json', 'r', 'utf_8')
 	for line in json_file:
-		file_record = json.loads(line)
-		if file_record["title"] == str:
-			result_list.append(file_record)
-			# result_list.extend(file_record)
-	return result_list
+		data_json = json.loads(line)
+		if data_json['title'] == 'イギリス':
+			return data_json['text']
+	raise ValueError('イギリスの記事が見つからない')
 
-# ディクショナリー構造をツリー構造化して出すメソッド
-def dictionary_tree(dictionary):
-	tree_box = []
-	for key, value in dictionary.items():
-		tree_box.append(key)
-		if isinstance(value, dict) == True:
-			dictionary_tree(value)
-		else:
-			print(tree_box)
-		tree_box.pop()
 
-def converte_dictionary(list):
-	result_dictionary = {}
-
-	for line in list:
-		for char in line:
-			
-
-		new_line_list = list[:-1].split('{')
-
-		result_dictionary.append(new_line_list)
-
-if __name__ == "__main__":
-	extractionMediaFileList = []
-	us_list = search_list("イギリス")
-
-	temp_list = []
-	for line in us_list:
-		new_line_list = line['text'][:-1].split('{')
-		# for line in new_line_list:
-		# 	kuten_list = line['text'][:-1].split('。')
-		# 	temp_list.extend(kuten_list)
-		temp_list.extend(new_line_list)
-	# print(temp_list[100])
-
-	print(len(temp_list))
+# 基礎情報テンプレートの抽出条件のコンパイル
+pattern = re.compile(r'''^\{\{基礎情報.*?$(.*?)^\}\}$''', re.MULTILINE + re.VERBOSE + re.DOTALL)
+# 基礎情報テンプレートの抽出
+contents = pattern.findall(extract_UK())
+# 抽出結果からのフィールド名と値の抽出条件コンパイル
+pattern = re.compile(r'''^\|(.+?)\s*=\s*(.+?)(?:(?=\n\|)| (?=\n$))''', re.MULTILINE + re.VERBOSE + re.DOTALL)
+# フィールド名と値の抽出
+fields = pattern.findall(contents[0])
+# 辞書にセット
+result    = {}
+keys_test = []
+for field in fields:
+	result[field[0]] = field[1]
+	keys_test.append(field[0])
+# 確認のため表示（確認しやすいようにkeys_testを使ってフィールド名の出現順にソート）
+for item in sorted(result.items(),
+		key=lambda field: keys_test.index(field[0])):
+	print(item)

@@ -3,10 +3,7 @@
 import re
 import copy
 
-# repatter = re.compile('\{')
-
 # appendは参照私ということに注意する
-
 def converte_dictionary(list):
 	result_dictionary = {}
 	for line in list:
@@ -16,7 +13,6 @@ def converte_dictionary(list):
 			if re.match('{' , char):
 				# リストの値をコピー
 				input_char_list = copy.deepcopy(char_list)
-				
 				str_list.append(input_char_list)
 				del char_list[:]
 			elif re.match('}' , char):
@@ -28,17 +24,37 @@ def converte_dictionary(list):
 			else:
 				char_list.extend(char)
 
+		# print(str_list)
+		num_list = []
+		num = 0;
 		for line in str_list:
-			print(line)
+			if line == []:
+				num += 1
+				num_list.append(num)
+			elif line == ["end"]:
+				num -= 1
+				num_list.append(num)
+			else:
+				num_list.append(num)
+		print(num_list)
+		num_list_plus = []
+		for num in num_list:
 
-			# matchOB = re.match('\{' , char)
-			#
-			# brace_list = char[:-1].split('{')
-			#
-			# result_dictionary.append(new_line_list)
+
+	# print(len(str_list))
+	# print(len(num_list))
+	#
+	result_list = []
+	count = 0
+	temp_num = 0
+	for line in num_list:
 
 
-# sample = ["{{AAA},aaaaaaa}aaaa", "{{ｐｐｐｐｐｐ}, {ｐｐｐｐｐｐｐｐｐ}}", "{{ああああああああ},{あああああああああああ}}"]
+		temp_num = line
+		count += 0
+
+		# for line in str_list:
+		# 	print(line)
 
 sample = ["{{AAA},aaaaaaa}{{ｐｐｐｐｐｐ} {ｐｐｐｐｐｐｐｐｐ}}{{ああああああああ}{あああああああああああ}}"]
 
