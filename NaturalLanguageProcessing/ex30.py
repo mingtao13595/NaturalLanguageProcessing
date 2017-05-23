@@ -39,10 +39,10 @@ def morphologicalAnalysis(text):
 			morpheme_list.append(morpheme_place_copy)
 			# ファイルへの書き込み
 			rf.write(
-				"{surface:" + morpheme_place_copy["surface"] + "," +
-				"base:" + morpheme_place_copy["base"] + "," +
-				"pos:" + morpheme_place_copy["pos"] + "," +
-				"pos1:" + morpheme_place_copy["pos1"] + "}\n"
+				"{'surface':" + morpheme_place_copy["surface"] + "," +
+				"'base':" + morpheme_place_copy["base"] + "," +
+				"'pos':" + morpheme_place_copy["pos"] + "," +
+				"'pos1':" + morpheme_place_copy["pos1"] + "}\n"
 			)
 		# elif i % 10 == 5:
 		# elif i % 10 == 6:
