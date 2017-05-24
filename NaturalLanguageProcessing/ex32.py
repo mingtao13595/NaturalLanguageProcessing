@@ -10,7 +10,7 @@ def gets_verb(list):
 	for line in list:
 		if line.get("base") == "動詞":
 			verbList.append(line)
-			print(line)
+			# print(line)
 	return verbList
 
 try:
