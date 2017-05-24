@@ -31,6 +31,17 @@ def morphologicalAnalysis(text, writeFile):
 		elif i % 10 == 3:
 			morpheme_place["pos1"]    = tmp_list[i]
 		elif i % 10 == 4:
+			morpheme_place["pos2"]    = tmp_list[i]
+		elif i % 10 == 5:
+			morpheme_place["pos3"]    = tmp_list[i]
+		elif i % 10 == 6:
+			morpheme_place["pos4"]    = tmp_list[i]
+		elif i % 10 == 7:
+			morpheme_place["pos5"]    = tmp_list[i]
+		elif i % 10 == 8:
+			morpheme_place["pos6"]    = tmp_list[i]
+		elif i % 10 == 9:
+			morpheme_place["pos7"]    = tmp_list[i]
 			# ファイルへの書き込み
 			json.dump(morpheme_place, writeFile, ensure_ascii=False, indent='\t', sort_keys=True, separators=(',', ': '))
 			writeFile.write(",\n")
