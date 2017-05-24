@@ -3,12 +3,11 @@
 
 import MeCab
 import re
-import copy
+import json
 
-def morphologicalAnalysis(text):
+def morphologicalAnalysis(text, writeFile):
 	m = MeCab.Tagger ("mecabrc")
 	mp = m.parse (text)
-	# mp = m.parse ("今日もしないとね")
 
 	tmp_list = []
 	tmp_word = ''
@@ -20,8 +19,6 @@ def morphologicalAnalysis(text):
 			tmp_word = ''
 		tmp_word += char
 
-	# 追記モードでファイルを開く
-	rf = open('./file/ex30_practice.json', 'a')
 	morpheme_list  = []
 	morpheme_place = {}
 	for i in range(len(tmp_list)):
@@ -34,29 +31,16 @@ def morphologicalAnalysis(text):
 		elif i % 10 == 3:
 			morpheme_place["pos1"]    = tmp_list[i]
 		elif i % 10 == 4:
-			# リストの値をコピー
-			morpheme_place_copy = copy.deepcopy(morpheme_place)
-			morpheme_list.append(morpheme_place_copy)
 			# ファイルへの書き込み
-			rf.write(
-				"{\"surface\":" +"\""+morpheme_place_copy["surface"] +"\""+ "," +
-				"\"base\":" +"\""+ morpheme_place_copy["base"] +"\""+ "," +
-				"\"pos\":" +"\""+ morpheme_place_copy["pos"] +"\""+ "," +
-				"\"pos1\":" +"\""+ morpheme_place_copy["pos1"] +"\""+ "},\n"
-			)
-		# elif i % 10 == 5:
-		# elif i % 10 == 6:
-		# elif i % 10 == 7:
-		# elif i % 10 == 8:
-		# elif i % 10 == 9:
-
-	# rf.close()
-
-	# for line in morpheme_list:
-	# 	print(line)
+			json.dump(morpheme_place, writeFile, ensure_ascii=False, indent='\t', sort_keys=True, separators=(',', ': '))
+			writeFile.write(",\n")
 
 f = open('./file/neko.txt', 'r')
-
+# 追記モードでファイルを開く
+rf = open('./file/ex30_practice.json', 'a')
+rf.write("[\n")
 for line in f:
-	morphologicalAnalysis(line)
+	morphologicalAnalysis(line, rf)
 	# print(line)
+json.dump({"end":"終"}, rf, ensure_ascii=False, indent='\t', sort_keys=True, separators=(',', ': '))
+rf.write("\n]")
