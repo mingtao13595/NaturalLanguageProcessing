@@ -4,6 +4,9 @@
 import MeCab
 import re
 import json
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
 
 def gets_surface(list):
 	surface_list = []
@@ -46,6 +49,51 @@ try:
 		frequency_list       = gets_frequency(emply_frequency_list, surface_list)
 		top_ten_list         = top_ten(frequency_list)
 
-		print(top_ten_list)
+		words  = []
+		counts = []
+		for k,v in top_ten_list.items():
+			words.extend(k)
+			counts.extend([v])
+
+		# グラフで使うフォント情報(デフォルトのままでは日本語が表示できない)
+		fp = FontProperties(
+			fname='/usr/share/fonts/migu-1p-20150712/migu-1p-regular.ttf'
+		)
+
+		size = len(top_ten_list)
+
+		plt.bar(
+			range(0, size),
+			counts,
+			align='center'
+		)
+
+		plt.xticks(
+			range(0, size),
+			words,
+			fontproperties=fp
+		)
+
+		plt.xlim(
+			xmin=-1, xmax=size
+		)
+
+		plt.title(
+			'37. 頻度上位10語',
+			fontproperties=fp
+		)
+		plt.xlabel(
+			'出現頻度が高い10語',
+			fontproperties=fp
+		)
+		plt.ylabel(
+			'出現頻度',
+			fontproperties=fp
+		)
+
+		plt.grid(axis='y')
+
+		plt.show()
+
 except json.JSONDecodeError as e:
 	print('JSONDecodeError: ', e)

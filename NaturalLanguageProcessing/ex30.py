@@ -5,7 +5,6 @@ import MeCab
 import re
 import json
 
-# def morphologicalAnalysis(text):
 def morphologicalAnalysis(text, writeFile):
 	m = MeCab.Tagger ("mecabrc")
 	mp = m.parse (text)
@@ -23,10 +22,6 @@ def morphologicalAnalysis(text, writeFile):
 	wordAnalysisSplitList = []
 	for line in wordAnalysisList:
 		wordAnalysisSplitList.append(line.split("_"))
-
-	# print("\n")
-	# for line in wordAnalysisSplitList:
-	# 	print(line)
 
 	morpheme_list  = []
 	morpheme_place = {}

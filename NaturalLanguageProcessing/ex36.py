@@ -36,6 +36,6 @@ try:
 		surface_list         = gets_surface(data)
 		emply_frequency_list = deplicate_delete(surface_list)
 		frequency_list       = gets_frequency(emply_frequency_list, surface_list)
-		# print(frequency_list)
+		print(frequency_list)
 except json.JSONDecodeError as e:
 	print('JSONDecodeError: ', e)
