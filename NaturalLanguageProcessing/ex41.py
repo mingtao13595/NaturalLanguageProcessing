@@ -34,32 +34,59 @@ class Chunk:
 
 	# ゲッターを定義
 	def getAttribute(self):
-		input_list = { "morphs":self.morphs, "srcs":self.srcs, "dst":self.dst}
+		input_list = {"morphs":self.morphs, "srcs":self.srcs, "dst":self.dst}
 		result_list = {}
 
 		for key,value in input_list.items():
 			result_list[key] = value
 		return result_list
 
-	# morphと紐づけて値を出すメソッド
-	def getAttribute(self):
-
-
 def read_and_parse():
 	with open(fname) as data_file, open(fname_parsed, mode='w') as out_file:
 		cabocha = CaboCha.Parser()
 		for line in data_file:
-			out_file.write(
-				cabocha.parse(line).toString(CaboCha.FORMAT_LATTICE)
-			)
+			out_file.write(cabocha.parse(line).toString(CaboCha.FORMAT_LATTICE))
 
 def article_shaping():
 	with open(fname_parsed) as file_parsed:
 		chunks = {}
+		chunk  = []
 		idx    = -1
+
 		for line in file_parsed:
-			print(line)
+			result_list = {}
+			if line == 'EOS\n':
+				result_list = {}
+				chunks.append(chunk)
+				del result_list
+				chunk = []
+			elif re.match(r'\*', line) is not None:
+				cols = line.split(' ')
+				idx  = int(cols[1])
+				dst  = int(re.search(r'(.*?)D', cols[2]).group(1))
+				if idx not in chunks:
+					chunks[idx] = Chunk()
+				chunks[idx].dst = dst
+				if dst != -1:
+					if dst not in chunks:
+						chunks[dst] = Chunk()
+						chunks[dst].srcs.append(idx)
+			else:
+				repl_line = re.sub(r'\t', ',', line)
+				repl_line = re.sub(r'\n', '', repl_line)
+				repl_list = repl_line.split(',')
+				morph = Morph(repl_list[0], repl_list[7], repl_list[1], repl_list[2])
+				chunk.append(morph)
+		return chunks
 
 # read_and_parse()
 
-article_shaping()
+chunks = article_shaping()
+count  = 0
+
+for k, chunk in chunks.item():
+	if count == 8:
+		for line in chunk:
+			print(line.getAttribute())
+		break
+	count += 1
