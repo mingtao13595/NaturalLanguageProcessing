@@ -1,7 +1,7 @@
 # coding: utf-8
 import CaboCha
 fname        = './file/neko.txt'
-fname_parsed = 'neko.txt.cabocha'
+fname_parsed = './file/neko.txt.cabocha'
 
 class Morph:
 	def __init__(self, surface, base, pos, pos1):
