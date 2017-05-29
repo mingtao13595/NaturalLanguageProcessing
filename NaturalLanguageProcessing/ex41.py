@@ -5,7 +5,6 @@ import re
 fname        = './file/neko.txt'
 fname_parsed = './file/neko.txt.cabocha'
 
-# Morphの構造体（Cの意味）定義
 class Morph:
 	def __init__(self, surface, base, pos, pos1):
 		self.surface = surface
@@ -13,12 +12,38 @@ class Morph:
 		self.pos     = pos
 		self.pos1    = pos1
 
-# Chunkの構造体（Cの意味）定義
+	# ゲッターを定義
+	def getAttribute(self):
+		input_list = {"surface":self.surface, "base":self.base, "pos":self.pos, "pos1":self.pos1}
+		result_list = {}
+
+		for key,value in input_list.items():
+			result_list[key] = value
+		return result_list
+
 class Chunk:
 	def __init__(self):
 		self.morphs = []
 		self.srcs   = []
 		self.dst    = -1
+
+	def setAttribute(self, morphs):
+		surface = ''
+		for morph in self.morphs:
+			surface += morph.surface
+
+	# ゲッターを定義
+	def getAttribute(self):
+		input_list = { "morphs":self.morphs, "srcs":self.srcs, "dst":self.dst}
+		result_list = {}
+
+		for key,value in input_list.items():
+			result_list[key] = value
+		return result_list
+
+	# morphと紐づけて値を出すメソッド
+	def getAttribute(self):
+
 
 def read_and_parse():
 	with open(fname) as data_file, open(fname_parsed, mode='w') as out_file:

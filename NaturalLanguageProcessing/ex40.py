@@ -31,11 +31,14 @@ def article_shaping():
 	with open(fname_parsed) as file_parsed:
 		chunks = []
 		idx    = -1
+
+		count  = 0
 		for line in file_parsed:
 			result_list = {}
 			if line == 'EOS\n':
 				result_list = {}
 				del result_list
+				count += 1
 				# break
 			elif re.match(r'\*', line) is None:
 				repl_line = re.sub(r'\t', ',', line)
@@ -43,7 +46,8 @@ def article_shaping():
 				repl_list = repl_line.split(',')
 				morph = Morph(repl_list[0], repl_list[7], repl_list[1], repl_list[2])
 				# 表示箇所
-				print(morph.getAttribute())
+				if count == 3:
+					print(morph.getAttribute())
 				chunks.append(morph)
 
 read_and_parse()
