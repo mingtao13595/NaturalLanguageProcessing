@@ -1,5 +1,7 @@
 # coding: utf-8
 import CaboCha
+import re
+
 fname        = './file/neko.txt'
 fname_parsed = './file/neko.txt.cabocha'
 
@@ -10,8 +12,14 @@ class Morph:
 		self.pos     = pos
 		self.pos1    = pos1
 
-	def __str__(self):
-		return 'surface[{}]\tbase[{}]\tpos[{}]\tpos1[{}]'.format(self.surface, self.base, self.pos, self.pos1)
+	# ゲッターを定義
+	def getAttribute(self):
+		input_list = {"surface":self.surface, "base":self.base, "pos":self.pos, "pos1":self.pos1}
+		result_list = {}
+
+		for key,value in input_list.items():
+			result_list[key] = value
+		return result_list
 
 def read_and_parse():
 	with open(fname) as data_file, open(fname_parsed, mode='w') as out_file:
@@ -19,29 +27,25 @@ def read_and_parse():
 		for line in data_file:
 			out_file.write(cabocha.parse(line).toString(CaboCha.FORMAT_LATTICE))
 
-def article_lines():
+def article_shaping():
 	with open(fname_parsed) as file_parsed:
-		morphs = []
+		chunks = []
+		idx    = -1
 		for line in file_parsed:
+			result_list = {}
 			if line == 'EOS\n':
-				yield morphs
-				morphs = []
-			else:
-				if line[0] == '*':
-					continue
-				cols = line.split('\t')
-				res_cols = cols[1].split(',')
-				morphs.append(Morph(
-					cols[0],
-					res_cols[6],
-					res_cols[0],
-					res_cols[1]
-				))
-		raise StopIteration
+				result_list = {}
+				del result_list
+				# break
+			elif re.match(r'\*', line) is None:
+				repl_line = re.sub(r'\t', ',', line)
+				repl_line = re.sub(r'\n', '', repl_line)
+				repl_list = repl_line.split(',')
+				morph = Morph(repl_list[0], repl_list[7], repl_list[1], repl_list[2])
+				# 表示箇所
+				print(morph.getAttribute())
+				chunks.append(morph)
 
 read_and_parse()
-for i, morphs in enumerate(article_lines(), 1):
-	if i == 3:
-		for morph in morphs:
-			print(morph)
-		break
+
+article_shaping()
