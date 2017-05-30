@@ -22,8 +22,8 @@ class Morph:
 		return result_list
 
 class Chunk:
-	def __init__(self):
-		self.morphs = []
+	def __init__(self, morphs):
+		self.morphs = morphs
 		self.srcs   = []
 		self.dst    = -1
 
@@ -49,44 +49,41 @@ def read_and_parse():
 
 def article_shaping():
 	with open(fname_parsed) as file_parsed:
-		chunks = {}
-		chunk  = []
-		idx    = -1
+		chunks    = []
+		idx       = -1
+		morphs    = []
 
 		for line in file_parsed:
-			result_list = {}
 			if line == 'EOS\n':
-				result_list = {}
-				chunks.append(chunk)
-				del result_list
-				chunk = []
+				if morphs != []:
+					chunk = Chunk(morphs)
+					chunks.append(chunk)
+				morphs = []
 			elif re.match(r'\*', line) is not None:
-				cols = line.split(' ')
-				idx  = int(cols[1])
-				dst  = int(re.search(r'(.*?)D', cols[2]).group(1))
-				if idx not in chunks:
-					chunks[idx] = Chunk()
-				chunks[idx].dst = dst
-				if dst != -1:
-					if dst not in chunks:
-						chunks[dst] = Chunk()
-						chunks[dst].srcs.append(idx)
+				pass
+				# cols = line.split(' ')
+				# idx  = int(cols[1])
+				# dst  = int(re.search(r'(.*?)D', cols[2]).group(1))
+				# # if idx not in chunks:
+				# if dst != -1:
+				# 	chunk.srcs.append(idx)
 			else:
 				repl_line = re.sub(r'\t', ',', line)
 				repl_line = re.sub(r'\n', '', repl_line)
 				repl_list = repl_line.split(',')
-				morph = Morph(repl_list[0], repl_list[7], repl_list[1], repl_list[2])
-				chunk.append(morph)
+				morph     = Morph(repl_list[0], repl_list[7], repl_list[1], repl_list[2])
+				morphs.append(morph)
 		return chunks
 
 # read_and_parse()
 
 chunks = article_shaping()
-count  = 0
 
-for k, chunk in chunks.item():
+count = 0
+for chunk in chunks:
 	if count == 8:
-		for line in chunk:
-			print(line.getAttribute())
+		morphs = chunk.getAttribute()['morphs']
+		for morph in morphs:
+			print(morph.getAttribute())
 		break
 	count += 1
