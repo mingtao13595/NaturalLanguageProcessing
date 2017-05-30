@@ -85,8 +85,10 @@ chunks = article_shaping()
 count = 0
 for chunk in chunks:
 	if count == 7:
+		display_list_chunk = chunk.getAttribute()
 		morphs = chunk.getAttribute()['morphs']
 		for morph in morphs:
-			print(morph.getAttribute())
+			display_list_morph = morph.getAttribute()
+			print("surface:"+str(display_list_morph['surface'])+"\t"+"srcs:"+str(display_list_chunk["srcs"])+"\t"+"dst:"+str(display_list_chunk["dst"]))
 		break
 	count += 1
