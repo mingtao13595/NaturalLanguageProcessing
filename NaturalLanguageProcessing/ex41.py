@@ -22,15 +22,19 @@ class Morph:
 		return result_list
 
 class Chunk:
-	def __init__(self, morphs):
-		self.morphs = morphs
+	def __init__(self):
+		self.morphs = []
 		self.srcs   = []
 		self.dst    = -1
 
+	# セッターを定義
 	def setAttribute(self, morphs):
-		surface = ''
-		for morph in self.morphs:
-			surface += morph.surface
+		self.morphs = morphs
+
+	# セッターを定義
+	def setAttribute_srcs(self, srcs, dst):
+		self.srcs   = srcs
+		self.dst    = dst
 
 	# ゲッターを定義
 	def getAttribute(self):
@@ -49,29 +53,28 @@ def read_and_parse():
 
 def article_shaping():
 	with open(fname_parsed) as file_parsed:
-		chunks    = []
-		idx       = -1
-		morphs    = []
+		chunks = []
+		idx    = -1
+		morphs = []
 
 		for line in file_parsed:
 			if line == 'EOS\n':
-				if morphs != []:
-					chunk = Chunk(morphs)
-					chunks.append(chunk)
+				chunk = Chunk()
+				chunk.setAttribute(morphs)
+				chunks.append(chunk)
 				morphs = []
 			elif re.match(r'\*', line) is not None:
 				pass
-				# cols = line.split(' ')
-				# idx  = int(cols[1])
-				# dst  = int(re.search(r'(.*?)D', cols[2]).group(1))
-				# # if idx not in chunks:
-				# if dst != -1:
-				# 	chunk.srcs.append(idx)
+				cols = line.split(' ')
+				idx  = int(cols[1])
+				dst  = int(re.search(r'(.*?)D', cols[2]).group(1))
+				if dst != -1:
+					chunk.setAttribute_srcs(dst,idx)
 			else:
 				repl_line = re.sub(r'\t', ',', line)
 				repl_line = re.sub(r'\n', '', repl_line)
 				repl_list = repl_line.split(',')
-				morph     = Morph(repl_list[0], repl_list[7], repl_list[1], repl_list[2])
+				morph = Morph(repl_list[0], repl_list[7], repl_list[1], repl_list[2])
 				morphs.append(morph)
 		return chunks
 
@@ -81,7 +84,7 @@ chunks = article_shaping()
 
 count = 0
 for chunk in chunks:
-	if count == 8:
+	if count == 7:
 		morphs = chunk.getAttribute()['morphs']
 		for morph in morphs:
 			print(morph.getAttribute())

@@ -137,17 +137,27 @@ def neco_lines():
 
 
 # 係り受け解析
-parse_neko()
+# parse_neko()
+
+# # 1文ずつリスト作成
+# for chunks in neco_lines():
+
+#     # 係り先があるものを列挙
+#     for chunk in chunks:
+#         if chunk.dst != -1:
+
+#             # 記号を除いた表層形をチェック、空なら除外
+#             src = chunk.normalized_surface()
+#             dst = chunks[chunk.dst].normalized_surface()
+#             if src != '' and dst != '':
+#                 # print(chunk)
+#                 print('{}\t{}'.format(src, dst))
 
 # 1文ずつリスト作成
-for chunks in neco_lines():
+for i, chunks in enumerate(neco_lines(), 1):
 
-    # 係り先があるものを列挙
-    for chunk in chunks:
-        if chunk.dst != -1:
-
-            # 記号を除いた表層形をチェック、空なら除外
-            src = chunk.normalized_surface()
-            dst = chunks[chunk.dst].normalized_surface()
-            if src != '' and dst != '':
-                print('{}\t{}'.format(src, dst))
+    # 8文目を表示
+    if i == 8:
+        for j, chunk in enumerate(chunks):
+            print('[{}]{}'.format(j, chunk))
+        break
