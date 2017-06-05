@@ -1,0 +1,6 @@
+I have a pen.
+I have an apple.
+I had a pen.
+I has an apple.
+I have been a pen.
+I had been an apple.
