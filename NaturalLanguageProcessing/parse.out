@@ -1,0 +1,29 @@
+[main] INFO edu.stanford.nlp.pipeline.StanfordCoreNLP - Adding annotator tokenize
+[main] INFO edu.stanford.nlp.pipeline.TokenizerAnnotator - No tokenizer type provided. Defaulting to PTBTokenizer.
+[main] INFO edu.stanford.nlp.pipeline.StanfordCoreNLP - Adding annotator ssplit
+[main] INFO edu.stanford.nlp.pipeline.StanfordCoreNLP - Adding annotator pos
+[main] INFO edu.stanford.nlp.tagger.maxent.MaxentTagger - Loading POS tagger from edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger ... done [1.8 sec].
+[main] INFO edu.stanford.nlp.pipeline.StanfordCoreNLP - Adding annotator lemma
+[main] INFO edu.stanford.nlp.pipeline.StanfordCoreNLP - Adding annotator ner
+[main] INFO edu.stanford.nlp.ie.AbstractSequenceClassifier - Loading classifier from edu/stanford/nlp/models/ner/english.all.3class.distsim.crf.ser.gz ... done [2.1 sec].
+[main] INFO edu.stanford.nlp.ie.AbstractSequenceClassifier - Loading classifier from edu/stanford/nlp/models/ner/english.muc.7class.distsim.crf.ser.gz ... done [1.7 sec].
+[main] INFO edu.stanford.nlp.ie.AbstractSequenceClassifier - Loading classifier from edu/stanford/nlp/models/ner/english.conll.4class.distsim.crf.ser.gz ... done [1.3 sec].
+[main] INFO edu.stanford.nlp.time.JollyDayHolidays - Initializing JollyDayHoliday for SUTime from classpath edu/stanford/nlp/models/sutime/jollyday/Holidays_sutime.xml as sutime.binder.1.
+[main] INFO edu.stanford.nlp.pipeline.StanfordCoreNLP - Adding annotator parse
+[main] INFO edu.stanford.nlp.parser.common.ParserGrammar - Loading parser from serialized file edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz ... done [3.7 sec].
+[main] INFO edu.stanford.nlp.pipeline.StanfordCoreNLP - Adding annotator dcoref
+
+Processing file /usr/etc/NaturalLanguageProcessing/NaturalLanguageProcessing/./file/nlp.txt ... writing to /usr/etc/NaturalLanguageProcessing/NaturalLanguageProcessing/nlp.txt.xml
+Annotating file /usr/etc/NaturalLanguageProcessing/NaturalLanguageProcessing/./file/nlp.txt ... done [24.7 sec].
+
+Annotation pipeline timing information:
+TokenizerAnnotator: 0.1 sec.
+WordsToSentencesAnnotator: 0.0 sec.
+POSTaggerAnnotator: 0.5 sec.
+MorphaAnnotator: 0.1 sec.
+NERCombinerAnnotator: 5.4 sec.
+ParserAnnotator: 14.3 sec.
+DeterministicCorefAnnotator: 4.3 sec.
+TOTAL: 24.7 sec. for 1452 tokens at 58.8 tokens/sec.
+Pipeline setup: 15.3 sec.
+Total time for StanfordCoreNLP pipeline: 40.4 sec.
