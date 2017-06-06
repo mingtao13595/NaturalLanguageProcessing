@@ -3,9 +3,11 @@
 
 import os
 import subprocess
+import pydot_ng as pydot
 import xml.etree.ElementTree as ET
 
 fname_parsed = 'nlp.txt.xml'
+
 if not os.path.exists(fname_parsed):
 	subprocess.run(
 		'java -cp "/root/stanford-corenlp-full-2016-10-31/*"'
@@ -16,32 +18,45 @@ if not os.path.exists(fname_parsed):
 		shell=True,
 		check=True
 	)
+
+# xmlへパース
 root = ET.parse(fname_parsed)
 
-rep_dict = {}
-for coreference in root.iterfind('./document/coreference/coreference'):
-	rep_text = coreference.findtext('./mention[@representative="true"]/text')
-	for mention in coreference.iterfind('./mention'):
-		if(mention.get('representative', 'false') == 'false'):
-			sent_id = int(mention.findtext('sentence'))
-			start   = int(mention.findtext('start'))
-			end     = int(mention.findtext('end'))
-			if not (sent_id, start) in rep_dict:
-				rep_dict[(sent_id, start)] = (end, rep_text)
-
+# sentence列挙、1文ずつ処理
 for sentence in root.iterfind('./document/sentences/sentence'):
-	sent_id  = int(sentence.get('id'))
-	org_rest = 0
-	for token in sentence.iterfind('./tokens/token'):
-		token_id = int(token.get('id'))
-		if org_rest == 0 and (sent_id, token_id) in rep_dict:
-			(end, rep_text) = rep_dict[(sent_id, token_id)]
-			print('[' + rep_text + '] (', end='')
-			org_rest = end - token_id
-		print(token.findtext('word'), end='')
-		if(org_rest > 0):
-			org_rest -= 1
-			if(org_rest == 0):
-				print(')', end='')
-		print(' ', end='')
-	print()
+	sent_id = int(sentence.get('id'))
+
+	edges = []
+
+	# dependencies列挙
+	for dep in sentence.iterfind(
+		'./dependencies[@type="collapsed-dependencies"]/dep'
+	):
+
+		# 句読点はスキップ
+		if dep.get('type') != 'punct':
+
+			# governor、dependent取得、edgesに追加
+			govr = dep.find('./governor')
+			dept = dep.find('./dependent')
+			edges.append(
+				((govr.get('idx'), govr.text), (dept.get('idx'), dept.text))
+			)
+
+	# 描画
+	if len(edges) > 0:
+		graph = pydot.Dot(graph_type='digraph')
+		for edge in edges:
+
+			id1 = str(edge[0][0])
+			label1 = str(edge[0][1])
+			id2 = str(edge[1][0])
+			label2 = str(edge[1][1])
+
+			# ノード追加
+			graph.add_node(pydot.Node(id1, label=label1))
+			graph.add_node(pydot.Node(id2, label=label2))
+
+			# エッジ追加
+			graph.add_edge(pydot.Edge(id1, id2))
+		graph.write_png('./file/{}.png'.format(sent_id))
