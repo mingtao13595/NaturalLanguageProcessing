@@ -1,12 +1,50 @@
-# coding: UTF-8
+# coding: utf-8
 #!/usr/bin/env python
 
 import os
 import subprocess
-import pydot_ng as pydot
 import xml.etree.ElementTree as ET
+import re
 
 fname_parsed = 'nlp.txt.xml'
+pattern = re.compile(r'''
+	^
+	\(
+		(.*?)
+		\s
+		(.*)
+	\)
+	$
+	''', re.VERBOSE + re.DOTALL)
+
+def ParseAndExtractNP(str, list_np):
+	match = pattern.match(str)
+	tag   = match.group(1)
+	value = match.group(2)
+
+	depth = 0
+	chunk = ''
+	words = []
+	for c in value:
+		if c == '(':
+			chunk += c
+			depth += 1
+		elif c == ')':
+			chunk += c
+			depth -= 1
+			if depth == 0:
+				words.append(ParseAndExtractNP(chunk, list_np))
+				chunk = ''
+		else:
+			if not (depth == 0 and c == ' '):
+				chunk += c
+	if chunk != '':
+		words.append(chunk)
+	result = ' '.join(words)
+	if tag == 'NP':
+		list_np.append(result)
+	return result
+
 if not os.path.exists(fname_parsed):
 	subprocess.run(
 		'java -cp "/root/stanford-corenlp-full-2016-10-31/*"'
@@ -18,38 +56,9 @@ if not os.path.exists(fname_parsed):
 		check=True
 	)
 
-# xmlへパース
 root = ET.parse(fname_parsed)
 
-# sentence列挙、1文ずつ処理
-for sentence in root.iterfind('./document/sentences/sentence'):
-	sent_id = int(sentence.get('id'))
-	edges   = []
-
-	# dependencies列挙
-	for dep in sentence.iterfind(
-		'./dependencies[@type="collapsed-dependencies"]/dep'
-	):
-		# 句読点はスキップ
-		if dep.get('type') != 'punct':
-			# governor、dependent取得、edgesに追加
-			govr = dep.find('./governor')
-			dept = dep.find('./dependent')
-			edges.append(
-				((govr.get('idx'), govr.text), (dept.get('idx'), dept.text))
-			)
-
-	# 描画
-	if len(edges) > 0:
-		graph = pydot.Dot(graph_type='digraph')
-		for edge in edges:
-			id1    = str(edge[0][0])
-			label1 = str(edge[0][1])
-			id2    = str(edge[1][0])
-			label2 = str(edge[1][1])
-			# ノード追加
-			graph.add_node(pydot.Node(id1, label=label1))
-			graph.add_node(pydot.Node(id2, label=label2))
-			# エッジ追加
-			graph.add_edge(pydot.Edge(id1, id2))
-		graph.write_png('./file/{}.png'.format(sent_id))
+for parse in root.iterfind('./document/sentences/sentence/parse'):
+	result = []
+	ParseAndExtractNP(parse.text.strip(), result)
+print(*result, sep='\n')
